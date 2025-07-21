@@ -1,0 +1,11 @@
+# node
+node_modules
+dist
+.env
+.vscode
+.cache
+.DS_Store
+*.log
+*.lock
+.idea
+*.zip
