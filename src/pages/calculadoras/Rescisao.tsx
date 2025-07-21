@@ -7,10 +7,18 @@ export default function Rescisao() {
   const [admissao, setAdmissao] = useState('');
   const [saida, setSaida] = useState('');
   const [aviso, setAviso] = useState('');
-  const [feriasVencidas, setFeriasVencidas] = useState(false);
+  const [feriasVencidas, setFeriasVencidas] = useState<boolean | null>(null);
   const [motivo, setMotivo] = useState('');
   const [resultado, setResultado] = useState<ResultadoDetalhado | null>(null);
   const [erros, setErros] = useState<{ [key: string]: string }>({});
+
+  function temDireitoAFeriasVencidas(dataAdmissao: string, dataSaida: string): boolean {
+    if (!dataAdmissao || !dataSaida) return false;
+    const adm = new Date(dataAdmissao);
+    const sai = new Date(dataSaida);
+    const diff = sai.getTime() - adm.getTime();
+    return diff >= 365 * 24 * 60 * 60 * 1000;
+  }
 
   const calcular = () => {
     const novosErros: { [key: string]: string } = {};
@@ -20,6 +28,9 @@ export default function Rescisao() {
     if (!saida) novosErros.saida = 'Informe a data de saída.';
     if (!motivo) novosErros.motivo = 'Selecione o motivo da saída.';
     if (!aviso) novosErros.aviso = 'Selecione o tipo de aviso prévio.';
+    if (feriasVencidas === null && temDireitoAFeriasVencidas(admissao, saida)) {
+      novosErros.feriasVencidas = 'Informe se possui férias vencidas.';
+    }
 
     if (Object.keys(novosErros).length > 0) {
       setErros(novosErros);
@@ -27,7 +38,6 @@ export default function Rescisao() {
     }
 
     setErros({});
-
     const salarioNum = parseFloat(salario);
     if (isNaN(salarioNum)) return;
 
@@ -37,7 +47,7 @@ export default function Rescisao() {
       dataSaida: saida,
       motivo,
       aviso,
-      feriasVencidas,
+      feriasVencidas: feriasVencidas || false,
     });
 
     setResultado(total);
@@ -46,12 +56,12 @@ export default function Rescisao() {
   return (
     <div className="max-w-3xl mx-auto p-6 bg-white rounded shadow mt-6">
       <h1 className="text-2xl font-bold mb-4 text-blue-700">Cálculo de Rescisão CLT</h1>
-
       <p className="mb-6 text-gray-700">
         Preencha os dados abaixo para estimar o valor da sua rescisão trabalhista.
       </p>
 
       <div className="grid gap-4">
+        {/* Salário */}
         <div>
           <label className="block font-medium">
             Salário bruto
@@ -70,6 +80,7 @@ export default function Rescisao() {
           {erros.salario && <p className="text-red-500 text-sm">{erros.salario}</p>}
         </div>
 
+        {/* Admissão */}
         <div>
           <label className="block font-medium">
             Data de admissão
@@ -84,6 +95,7 @@ export default function Rescisao() {
           {erros.admissao && <p className="text-red-500 text-sm">{erros.admissao}</p>}
         </div>
 
+        {/* Saída */}
         <div>
           <label className="block font-medium">
             Data de saída
@@ -98,6 +110,7 @@ export default function Rescisao() {
           {erros.saida && <p className="text-red-500 text-sm">{erros.saida}</p>}
         </div>
 
+        {/* Aviso prévio */}
         <div>
           <label className="block font-medium">
             Tipo de aviso prévio
@@ -116,6 +129,7 @@ export default function Rescisao() {
           {erros.aviso && <p className="text-red-500 text-sm">{erros.aviso}</p>}
         </div>
 
+        {/* Motivo */}
         <div>
           <label className="block font-medium">
             Motivo da saída
@@ -134,16 +148,43 @@ export default function Rescisao() {
           {erros.motivo && <p className="text-red-500 text-sm">{erros.motivo}</p>}
         </div>
 
-        <div className="flex items-center gap-2">
-          <input
-            type="checkbox"
-            checked={feriasVencidas}
-            onChange={e => setFeriasVencidas(e.target.checked)}
-          />
-          <label>
-            Possui férias vencidas
+        {/* Férias vencidas */}
+        <div>
+          <label className="block font-medium">
+            Possui férias vencidas?
             <Tooltip message="Você já completou 12 meses de trabalho e ainda não tirou férias?" />
           </label>
+          <div className="flex gap-4 mt-2">
+            <label className={`flex items-center gap-2 ${!temDireitoAFeriasVencidas(admissao, saida) ? 'opacity-50' : ''}`}>
+              <input
+                type="radio"
+                name="ferias"
+                value="sim"
+                disabled={!temDireitoAFeriasVencidas(admissao, saida)}
+                checked={feriasVencidas === true}
+                onChange={() => setFeriasVencidas(true)}
+              />
+              Sim
+            </label>
+
+            <label className={`flex items-center gap-2 ${!temDireitoAFeriasVencidas(admissao, saida) ? 'opacity-50' : ''}`}>
+              <input
+                type="radio"
+                name="ferias"
+                value="nao"
+                disabled={!temDireitoAFeriasVencidas(admissao, saida)}
+                checked={feriasVencidas === false}
+                onChange={() => setFeriasVencidas(false)}
+              />
+              Não
+            </label>
+          </div>
+          {erros.feriasVencidas && <p className="text-red-500 text-sm">{erros.feriasVencidas}</p>}
+          {admissao && saida && !temDireitoAFeriasVencidas(admissao, saida) && (
+            <p className="text-sm text-yellow-600 mt-1">
+              ⚠️ Pelo tempo informado, você ainda não tem direito a férias vencidas.
+            </p>
+          )}
         </div>
 
         <button
@@ -157,20 +198,20 @@ export default function Rescisao() {
           <div className="mt-6 bg-blue-50 border-l-4 border-blue-400 text-blue-900 p-4 rounded">
             <p className="font-medium mb-2">Resultado estimado:</p>
             <ul className="text-sm mb-3 space-y-1">
-              <li>🔹 Saldo de salário: <strong>R$ {resultado.saldoSalario.toFixed(2)}</strong></li>
-              <li>🔹 Aviso prévio: <strong>R$ {resultado.avisoPrevio.toFixed(2)}</strong></li>
-              <li>🔹 13º proporcional: <strong>R$ {resultado.decimoTerceiro.toFixed(2)}</strong></li>
-              <li>🔹 Férias proporcionais: <strong>R$ {resultado.feriasProporcionais.toFixed(2)}</strong></li>
-              <li>🔹 1/3 de férias: <strong>R$ {resultado.umTercoFerias.toFixed(2)}</strong></li>
+              <li>🔹 Saldo de salário: <strong>R$ {resultado.saldoSalario.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</strong></li>
+              <li>🔹 Aviso prévio: <strong>R$ {resultado.avisoPrevio.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</strong></li>
+              <li>🔹 13º proporcional: <strong>R$ {resultado.decimoTerceiro.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</strong></li>
+              <li>🔹 Férias proporcionais: <strong>R$ {resultado.feriasProporcionais.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</strong></li>
+              <li>🔹 1/3 de férias: <strong>R$ {resultado.umTercoFerias.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</strong></li>
               {resultado.feriasVencidas > 0 && (
-                <li>🔹 Férias vencidas: <strong>R$ {resultado.feriasVencidas.toFixed(2)}</strong></li>
+                <li>🔹 Férias vencidas: <strong>R$ {resultado.feriasVencidas.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</strong></li>
               )}
               {resultado.multaFgts > 0 && (
-                <li>🔹 Multa de 40% do FGTS: <strong>R$ {resultado.multaFgts.toFixed(2)}</strong></li>
+                <li>🔹 Multa de 40% do FGTS: <strong>R$ {resultado.multaFgts.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</strong></li>
               )}
             </ul>
             <p className="text-xl font-bold">
-              Total estimado: R$ {resultado.total.toFixed(2)}
+              Total estimado: {resultado.total.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
             </p>
             <p className="text-xs text-gray-600 mt-2">
               Este valor é uma simulação com base na CLT. Consulte um contador para casos específicos.
