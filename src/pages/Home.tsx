@@ -1,10 +1,24 @@
+
 import React from 'react';
 import { Link } from 'react-router-dom';
 
 export default function Home() {
   const calculadoras = [
-    { nome: 'Rescisão CLT', rota: '/rescisao', descricao: 'Simule sua demissão ou pedido de demissão' },
-    { nome: 'Em breve...', rota: '#', descricao: 'Nova calculadora chegando!' },
+    {
+      nome: 'Rescisão CLT',
+      rota: '/rescisao',
+      descricao: 'Simule sua demissão ou pedido de demissão com base nas leis trabalhistas.'
+    },
+    {
+      nome: 'Salário Líquido',
+      rota: '/salario-liquido',
+      descricao: 'Calcule seu salário líquido com base nas regras atualizadas de INSS e IRRF (2025).'
+    },
+    {
+      nome: 'Em breve...',
+      rota: '#',
+      descricao: 'Nova calculadora chegando!'
+    }
   ];
 
   return (
