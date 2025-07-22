@@ -3,13 +3,11 @@ import { Link } from 'react-router-dom';
 
 export default function Sobre() {
   useEffect(() => {
-    // --- MODIFICADO ---
     document.title = 'Sobre o MyCalculadora';
   }, []);
 
   return (
     <div className="max-w-3xl mx-auto p-6 bg-white rounded shadow mt-6">
-      {/* --- MODIFICADO --- */}
       <h1 className="text-3xl font-bold mb-4 text-blue-700">Sobre o MyCalculadora</h1>
       
       <div className="space-y-6 text-gray-700">
@@ -22,13 +20,33 @@ export default function Sobre() {
             Simples, rápido, confiável — e de graça.
           </p>
         </div>
-
-        <div>
+        
+        {/* --- INÍCIO DA MODIFICAÇÃO: ESTILO "BIO DE AUTOR" --- */}
+        <div className="border-t pt-6 mt-8">
           <h2 className="text-2xl font-bold mb-3 text-blue-600">Desenvolvido por</h2>
-          <p>
+          <p className="mb-2">
             <strong className="font-semibold">Mylena Viana Nunes</strong> — estudante de Análise e Desenvolvimento de Sistemas no Instituto Federal de Rondônia (IFRO).
           </p>
+          <div className="flex space-x-4">
+            <a 
+              href="https://www.linkedin.com/in/mylena-viana-nunes/" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-blue-600 hover:underline"
+            >
+              LinkedIn
+            </a>
+            <a 
+              href="https://github.com/mylenosa" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-blue-600 hover:underline"
+            >
+              GitHub
+            </a>
+          </div>
         </div>
+        {/* --- FIM DA MODIFICAÇÃO --- */}
 
         <div>
           <h2 className="text-2xl font-bold mb-3 text-blue-600">Aviso Legal</h2>

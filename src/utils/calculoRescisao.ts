@@ -24,11 +24,20 @@ export function calcularRescisaoReal(dados: DadosRescisao): ResultadoDetalhado {
   const admissao = new Date(dataAdmissao);
   const saida = new Date(dataSaida);
 
-  // --- LINHA CORRIGIDA ---
-  const mesesTrabalhados = (saida.getFullYear() - admissao.getFullYear()) * 12 + (saida.getMonth() - admissao.getMonth());
-  const diasNoMes = saida.getDate();
+  const diasNoMesSaida = saida.getDate();
+  const saldoSalario = (salario / 30) * diasNoMesSaida;
 
-  const saldoSalario = (salario / 30) * diasNoMes;
+  // --- LÓGICA DE CÁLCULO DE MESES APERFEIÇOADA ---
+  const diffTime = Math.abs(saida.getTime() - admissao.getTime());
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  const mesesTrabalhadosTotal = Math.floor(diffDays / 30); // Aproximação para o total de meses
+
+  // Lógica para 13º e Férias Proporcionais (regra dos 15 dias)
+  let mesesParaCalculo = (saida.getFullYear() - admissao.getFullYear()) * 12 + (saida.getMonth() - admissao.getMonth());
+  if (diasNoMesSaida >= 15) {
+    mesesParaCalculo += 1;
+  }
+  // --- FIM DA LÓGICA APERFEIÇOADA ---
 
   let avisoPrevio = 0;
   if (motivo === 'sem_justa_causa' && aviso === 'indenizado') {
@@ -37,11 +46,11 @@ export function calcularRescisaoReal(dados: DadosRescisao): ResultadoDetalhado {
     avisoPrevio = -salario;
   }
 
-  const decimoTerceiro = (salario / 12) * (mesesTrabalhados % 12);
-  const feriasProporcionais = (salario / 12) * (mesesTrabalhados % 12);
-  const umTercoFerias = feriasProporcionais / 3;
-  const feriasVencidasValor = feriasVencidas ? salario + salario / 3 : 0;
-  const fgtsDepositos = salario * 0.08 * mesesTrabalhados;
+  const decimoTerceiro = (salario / 12) * (saida.getMonth() + 1); // 13º é calculado sobre os meses do ano corrente
+  const feriasProporcionais = (salario / 12) * (mesesParaCalculo % 12);
+  const umTercoFerias = (feriasProporcionais / 3);
+  const feriasVencidasValor = feriasVencidas ? (salario + salario / 3) : 0;
+  const fgtsDepositos = salario * 0.08 * mesesTrabalhadosTotal;
   const multaFgts = motivo === 'sem_justa_causa' ? fgtsDepositos * 0.4 : 0;
 
   const total =

@@ -160,11 +160,12 @@ export default function Rescisao() {
               <option value="">{avisoPrevioDesabilitado ? 'Não aplicável' : 'Selecione'}</option>
               {opcoesAviso.map(opt => (<option key={opt.value} value={opt.value}>{opt.label}</option>))}
             </select>
+            {/* --- TOOLTIP ADICIONADO --- */}
             {avisoPrevioDesabilitado && motivo === 'justa_causa' && (
               <div className="absolute inset-0 group cursor-help">
-                 <div className="absolute hidden group-hover:block bg-gray-800 text-white text-xs p-2 rounded shadow-lg w-64 top-full mt-2 left-1/2 -translate-x-1/2 z-10">
-                   O aviso prévio não é aplicável em demissões por justa causa.
-                 </div>
+                <div className="absolute hidden group-hover:block bg-gray-800 text-white text-xs p-2 rounded shadow-lg w-64 top-full mt-2 left-1/2 -translate-x-1/2 z-10">
+                  O aviso prévio não é aplicável em demissões por justa causa.
+                </div>
               </div>
             )}
           </div>
