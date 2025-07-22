@@ -6,6 +6,11 @@ import Rescisao from './pages/calculadoras/Rescisao';
 import SalarioLiquido from './pages/calculadoras/SalarioLiquido';
 import Footer from './components/Footer';
 
+// --- INÍCIO DA MODIFICAÇÃO ---
+import Sobre from './pages/Sobre';
+import NotFound from './pages/NotFound';
+// --- FIM DA MODIFICAÇÃO ---
+
 function App() {
   return (
     <Router>
@@ -16,6 +21,12 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/rescisao" element={<Rescisao />} />
             <Route path="/salario-liquido" element={<SalarioLiquido />} />
+            
+            {/* --- ROTAS ADICIONADAS --- */}
+            <Route path="/sobre" element={<Sobre />} />
+            <Route path="*" element={<NotFound />} /> 
+            {/* A rota "*" (curinga) deve ser sempre a última */}
+
           </Routes>
         </main>
         <Footer />

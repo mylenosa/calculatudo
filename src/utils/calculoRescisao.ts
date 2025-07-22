@@ -24,11 +24,19 @@ export function calcularRescisaoReal(dados: DadosRescisao): ResultadoDetalhado {
   const admissao = new Date(dataAdmissao);
   const saida = new Date(dataSaida);
 
+  // --- LINHA CORRIGIDA ---
   const mesesTrabalhados = (saida.getFullYear() - admissao.getFullYear()) * 12 + (saida.getMonth() - admissao.getMonth());
   const diasNoMes = saida.getDate();
 
   const saldoSalario = (salario / 30) * diasNoMes;
-  const avisoPrevio = aviso === 'indenizado' ? salario : 0;
+
+  let avisoPrevio = 0;
+  if (motivo === 'sem_justa_causa' && aviso === 'indenizado') {
+    avisoPrevio = salario;
+  } else if (motivo === 'pedido_demissao' && aviso === 'nao_cumprido') {
+    avisoPrevio = -salario;
+  }
+
   const decimoTerceiro = (salario / 12) * (mesesTrabalhados % 12);
   const feriasProporcionais = (salario / 12) * (mesesTrabalhados % 12);
   const umTercoFerias = feriasProporcionais / 3;

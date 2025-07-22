@@ -1,20 +1,39 @@
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react'; // Importar o useEffect
 import Tooltip from '../../components/Tooltip';
 import { calcularSalario } from '../../utils/calculoSalario';
 
 export default function SalarioLiquido() {
+  useEffect(() => {
+    // --- MODIFICADO ---
+    document.title = 'Calculadora de Salário Líquido | MyCalculadora';
+  }, []);
+
   const [salario, setSalario] = useState('');
   const [dependentes, setDependentes] = useState('0');
   const [descontos, setDescontos] = useState('');
   const [resultado, setResultado] = useState(null);
+  const [erro, setErro] = useState('');
 
   const calcular = () => {
-    if (!salario) return;
-
+    if (!salario) {
+      setErro('O campo "Salário bruto" é obrigatório.');
+      setResultado(null);
+      return;
+    }
+    
     const salarioNum = parseFloat(salario);
-    const dependentesNum = parseInt(dependentes);
+    const dependentesNum = parseInt(dependentes || '0');
     const descontosNum = parseFloat(descontos || "0");
+
+    // --- INÍCIO DA NOVA VALIDAÇÃO ---
+    if (salarioNum < 0 || dependentesNum < 0 || descontosNum < 0) {
+      setErro('Os valores inseridos não podem ser negativos. Por favor, verifique os campos.');
+      setResultado(null);
+      return;
+    }
+    // --- FIM DA NOVA VALIDAÇÃO ---
+    
+    setErro('');
 
     const res = calcularSalario({
       salario: salarioNum,
@@ -32,7 +51,6 @@ export default function SalarioLiquido() {
         Preencha os campos abaixo para estimar o valor do seu salário líquido mensal.
       </p>
 
-      {/* Bloco: Informações obrigatórias */}
       <div className="grid gap-4 sm:grid-cols-2 mb-6">
         <div className="sm:col-span-2">
           <label className="block font-medium">
@@ -43,6 +61,7 @@ export default function SalarioLiquido() {
             <span className="bg-gray-100 px-3 py-2 rounded-l text-gray-600">R$</span>
             <input
               type="number"
+              min="0" // Impede a inserção de negativos pelo navegador
               className="border rounded-r px-3 py-2 w-full"
               placeholder="Ex: 3000"
               value={salario}
@@ -58,6 +77,7 @@ export default function SalarioLiquido() {
           </label>
           <input
             type="number"
+            min="0" // Impede a inserção de negativos pelo navegador
             className="border rounded px-3 py-2 w-full"
             placeholder="Ex: 2"
             value={dependentes}
@@ -66,7 +86,6 @@ export default function SalarioLiquido() {
         </div>
       </div>
 
-      {/* Bloco: Descontos opcionais */}
       <div className="border-t pt-4 mt-4">
         <p className="font-medium text-gray-800 mb-2">Possui descontos mensais?</p>
         <div>
@@ -78,6 +97,7 @@ export default function SalarioLiquido() {
             <span className="bg-gray-100 px-3 py-2 rounded-l text-gray-600">R$</span>
             <input
               type="number"
+              min="0" // Impede a inserção de negativos pelo navegador
               className="border rounded-r px-3 py-2 w-full"
               placeholder="Ex: 400"
               value={descontos}
@@ -86,6 +106,12 @@ export default function SalarioLiquido() {
           </div>
         </div>
       </div>
+      
+      {erro && (
+        <div className="bg-red-100 border-l-4 border-red-500 text-red-700 p-3 rounded mt-6">
+          <p>{erro}</p>
+        </div>
+      )}
 
       <button
         onClick={calcular}
@@ -105,7 +131,7 @@ export default function SalarioLiquido() {
             Salário líquido: R$ {resultado.liquido.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
           </p>
           <p className="text-xs text-gray-600 mt-2">
-            Esta é uma simulação baseada nas regras atuais. Consulte um contador para casos específicos.
+            Esta é uma simulação baseada nas regras atuais (tabelas INSS/IRRF de 2025). Consulte um contador para casos específicos.
           </p>
         </div>
       )}

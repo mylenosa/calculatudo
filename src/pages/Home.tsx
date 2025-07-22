@@ -1,8 +1,12 @@
-
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 export default function Home() {
+  useEffect(() => {
+    // --- MODIFICADO ---
+    document.title = 'MyCalculadora | Calculadoras Úteis para o Dia a Dia';
+  }, []);
+  
   const calculadoras = [
     {
       nome: 'Rescisão CLT',
