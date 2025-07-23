@@ -35,8 +35,8 @@ export default function Home() {
             className={`border rounded-lg p-4 shadow-sm hover:shadow-md transition 
             ${calc.rota === '#' ? 'cursor-not-allowed opacity-50' : 'hover:bg-blue-50'}`}
           >
-            <h2 className="font-semibold text-lg mb-1">{calc.nome}</h2>
-            <p className="text-gray-700 text-sm">{calc.descricao}</p>
+            <h2 className="font-semibold text-lg mb-1 text-gray-900">{calc.nome}</h2>
+            <p className="text-gray-800 text-sm">{calc.descricao}</p>
           </Link>
         ))}
       </div>
