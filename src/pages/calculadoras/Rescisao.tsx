@@ -7,15 +7,34 @@ export default function Rescisao() {
     document.title = 'Calculadora de Rescisão CLT | MyCalculadora';
   }, []);
   
-  
-  const [salario, setSalario] = useState('');
-  const [admissao, setAdmissao] = useState('');
-  const [saida, setSaida] = useState('');
-  const [aviso, setAviso] = useState('');
-  const [feriasVencidas, setFeriasVencidas] = useState<boolean | null>(null);
-  const [motivo, setMotivo] = useState('');
+  const initialState = {
+    salario: '',
+    admissao: '',
+    saida: '',
+    aviso: '',
+    motivo: '',
+    feriasVencidas: null as boolean | null,
+  };
+
+  const [salario, setSalario] = useState(initialState.salario);
+  const [admissao, setAdmissao] = useState(initialState.admissao);
+  const [saida, setSaida] = useState(initialState.saida);
+  const [aviso, setAviso] = useState(initialState.aviso);
+  const [feriasVencidas, setFeriasVencidas] = useState(initialState.feriasVencidas);
+  const [motivo, setMotivo] = useState(initialState.motivo);
   const [resultado, setResultado] = useState<any>(null);
   const [erro, setErro] = useState('');
+
+  const handleClear = () => {
+    setSalario(initialState.salario);
+    setAdmissao(initialState.admissao);
+    setSaida(initialState.saida);
+    setAviso(initialState.aviso);
+    setFeriasVencidas(initialState.feriasVencidas);
+    setMotivo(initialState.motivo);
+    setResultado(null);
+    setErro('');
+  };
 
   useEffect(() => {
     setAviso('');
@@ -29,7 +48,6 @@ export default function Rescisao() {
           { value: 'trabalhado', label: 'Trabalhado' },
         ];
       case 'pedido_demissao':
-        // --- OPÇÃO ADICIONADA ---
         return [
           { value: 'trabalhado', label: 'Trabalhado' },
           { value: 'dispensado', label: 'Dispensado pelo empregador' },
@@ -210,9 +228,20 @@ export default function Rescisao() {
             </div>
           )}
 
-          <button onClick={calcular} className="bg-blue-700 hover:bg-blue-800 text-white font-medium py-2 px-4 rounded">
-            Calcular rescisão
-          </button>
+          <div className="mt-6 flex flex-col sm:flex-row gap-3">
+            <button
+              onClick={calcular}
+              className="bg-blue-700 hover:bg-blue-800 text-white font-medium py-2 px-4 rounded w-full sm:w-auto"
+            >
+              Calcular rescisão
+            </button>
+            <button
+              onClick={handleClear}
+              className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-2 px-4 rounded w-full sm:w-auto"
+            >
+              Limpar
+            </button>
+          </div>
 
           {resultado && (
             <div className="mt-6 bg-blue-50 border-l-4 border-blue-400 text-blue-900 p-4 rounded">

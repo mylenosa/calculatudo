@@ -4,15 +4,29 @@ import { calcularSalario } from '../../utils/calculoSalario';
 
 export default function SalarioLiquido() {
   useEffect(() => {
-    // --- MODIFICADO ---
     document.title = 'Calculadora de Salário Líquido | MyCalculadora';
   }, []);
 
-  const [salario, setSalario] = useState('');
-  const [dependentes, setDependentes] = useState('0');
-  const [descontos, setDescontos] = useState('');
+  const initialState = {
+    salario: '',
+    dependentes: '0',
+    descontos: '',
+  };
+
+  const [salario, setSalario] = useState(initialState.salario);
+  const [dependentes, setDependentes] = useState(initialState.dependentes);
+  const [descontos, setDescontos] = useState(initialState.descontos);
   const [resultado, setResultado] = useState(null);
   const [erro, setErro] = useState('');
+
+  // --- INÍCIO DA NOVA FUNÇÃO ---
+  const handleClear = () => {
+    setSalario(initialState.salario);
+    setDependentes(initialState.dependentes);
+    setDescontos(initialState.descontos);
+    setResultado(null);
+    setErro('');
+  };
 
   const calcular = () => {
     if (!salario) {
@@ -25,13 +39,11 @@ export default function SalarioLiquido() {
     const dependentesNum = parseInt(dependentes || '0');
     const descontosNum = parseFloat(descontos || "0");
 
-    // --- INÍCIO DA NOVA VALIDAÇÃO ---
     if (salarioNum < 0 || dependentesNum < 0 || descontosNum < 0) {
       setErro('Os valores inseridos não podem ser negativos. Por favor, verifique os campos.');
       setResultado(null);
       return;
     }
-    // --- FIM DA NOVA VALIDAÇÃO ---
     
     setErro('');
 
@@ -113,12 +125,20 @@ export default function SalarioLiquido() {
         </div>
       )}
 
-      <button
-        onClick={calcular}
-        className="bg-blue-700 hover:bg-blue-800 text-white font-medium py-2 px-4 rounded mt-6 w-full sm:w-auto"
-      >
-        Calcular salário líquido
-      </button>
+      <div className="mt-6 flex flex-col sm:flex-row gap-3">
+        <button
+          onClick={calcular}
+          className="bg-blue-700 hover:bg-blue-800 text-white font-medium py-2 px-4 rounded w-full sm:w-auto"
+        >
+          Calcular salário líquido
+        </button>
+        <button
+          onClick={handleClear}
+          className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-2 px-4 rounded w-full sm:w-auto"
+        >
+          Limpar
+        </button>
+      </div>
 
       {resultado && (
         <div className="mt-6 bg-blue-50 border-l-4 border-blue-400 text-blue-900 p-4 rounded">
