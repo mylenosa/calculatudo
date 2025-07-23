@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 
 export default function Home() {
   useEffect(() => {
-    // --- MODIFICADO ---
     document.title = 'MyCalculadora | Calculadoras Úteis para o Dia a Dia';
   }, []);
   
