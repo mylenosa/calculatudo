@@ -36,7 +36,7 @@ export default function Home() {
             ${calc.rota === '#' ? 'cursor-not-allowed opacity-50' : 'hover:bg-blue-50'}`}
           >
             <h2 className="font-semibold text-lg mb-1">{calc.nome}</h2>
-            <p className="text-gray-600 text-sm">{calc.descricao}</p>
+            <p className="text-gray-700 text-sm">{calc.descricao}</p>
           </Link>
         ))}
       </div>
