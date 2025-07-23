@@ -32,8 +32,11 @@ export default function Home() {
           <Link
             key={i}
             to={calc.rota}
-            className={`border rounded-lg p-4 shadow-sm hover:shadow-md transition 
-            ${calc.rota === '#' ? 'cursor-not-allowed opacity-50' : 'hover:bg-blue-50'}`}
+            className={`border rounded-lg p-4 shadow-sm transition 
+            ${calc.rota === '#' 
+              ? 'cursor-not-allowed bg-gray-100' 
+              : 'hover:shadow-md hover:bg-blue-50'
+            }`}
           >
             <h2 className="font-semibold text-lg mb-1 text-gray-900">{calc.nome}</h2>
             <p className="text-gray-800 text-sm">{calc.descricao}</p>

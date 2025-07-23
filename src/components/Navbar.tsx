@@ -8,7 +8,7 @@ export default function Navbar() {
         <Link to="/" className="text-xl font-bold text-blue-700 hover:opacity-80 transition">
           MyCalculadora
         </Link>
-        <span className="hidden sm:block text-sm text-gray-400">
+        <span className="hidden sm:block text-sm text-gray-500">
           Simule cálculos confiáveis em segundos
         </span>      
       </div>
