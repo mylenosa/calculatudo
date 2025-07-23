@@ -1,0 +1,3 @@
+# Permitir que todos os robôs de busca acessem todas as páginas
+User-agent: *
+Allow: /
