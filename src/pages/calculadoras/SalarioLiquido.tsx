@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'; // Importar o useEffect
+import React, { useState, useEffect } from 'react';
 import Tooltip from '../../components/Tooltip';
 import { calcularSalario } from '../../utils/calculoSalario';
 
@@ -19,7 +19,6 @@ export default function SalarioLiquido() {
   const [resultado, setResultado] = useState(null);
   const [erro, setErro] = useState('');
 
-  // --- INÍCIO DA NOVA FUNÇÃO ---
   const handleClear = () => {
     setSalario(initialState.salario);
     setDependentes(initialState.dependentes);
@@ -65,15 +64,16 @@ export default function SalarioLiquido() {
 
       <div className="grid gap-4 sm:grid-cols-2 mb-6">
         <div className="sm:col-span-2">
-          <label className="block font-medium">
+          <label htmlFor="salario-bruto-sl" className="block font-medium">
             Salário bruto
             <Tooltip message="Salário mensal registrado na carteira de trabalho, sem considerar descontos ou adicionais." />
           </label>
           <div className="flex items-center">
             <span className="bg-gray-100 px-3 py-2 rounded-l text-gray-600">R$</span>
             <input
+              id="salario-bruto-sl"
               type="number"
-              min="0" // Impede a inserção de negativos pelo navegador
+              min="0"
               className="border rounded-r px-3 py-2 w-full"
               placeholder="Ex: 3000"
               value={salario}
@@ -83,13 +83,14 @@ export default function SalarioLiquido() {
         </div>
 
         <div className="sm:col-span-2">
-          <label className="block font-medium">
+          <label htmlFor="dependentes-sl" className="block font-medium">
             Número de dependentes
             <Tooltip message="Quantidade de dependentes legais que influenciam no cálculo do IRRF." />
           </label>
           <input
+            id="dependentes-sl"
             type="number"
-            min="0" // Impede a inserção de negativos pelo navegador
+            min="0"
             className="border rounded px-3 py-2 w-full"
             placeholder="Ex: 2"
             value={dependentes}
@@ -101,15 +102,16 @@ export default function SalarioLiquido() {
       <div className="border-t pt-4 mt-4">
         <p className="font-medium text-gray-800 mb-2">Possui descontos mensais?</p>
         <div>
-          <label className="block font-medium">
+          <label htmlFor="outros-descontos-sl" className="block font-medium">
             Outros descontos
             <Tooltip message="Inclui vale-transporte, plano de saúde, pensão alimentícia e outros descontos fixos." />
           </label>
           <div className="flex items-center">
             <span className="bg-gray-100 px-3 py-2 rounded-l text-gray-600">R$</span>
             <input
+              id="outros-descontos-sl"
               type="number"
-              min="0" // Impede a inserção de negativos pelo navegador
+              min="0"
               className="border rounded-r px-3 py-2 w-full"
               placeholder="Ex: 400"
               value={descontos}
