@@ -1,28 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import Tooltip from '../../components/Tooltip';
 import { calcularSalario } from '../../utils/calculoSalario';
+import { NumericFormat } from 'react-number-format'; 
 
 export default function SalarioLiquido() {
   useEffect(() => {
     document.title = 'Calculadora de Salário Líquido | MyCalculadora';
   }, []);
 
-  const initialState = {
-    salario: '',
-    dependentes: '0',
-    descontos: '',
-  };
-
-  const [salario, setSalario] = useState(initialState.salario);
-  const [dependentes, setDependentes] = useState(initialState.dependentes);
-  const [descontos, setDescontos] = useState(initialState.descontos);
+  const [salario, setSalario] = useState<number | undefined>(undefined);
+  const [dependentes, setDependentes] = useState('0');
+  const [descontos, setDescontos] = useState<number | undefined>(undefined);
   const [resultado, setResultado] = useState(null);
   const [erro, setErro] = useState('');
 
   const handleClear = () => {
-    setSalario(initialState.salario);
-    setDependentes(initialState.dependentes);
-    setDescontos(initialState.descontos);
+    setSalario(undefined);
+    setDependentes('0');
+    setDescontos(undefined);
     setResultado(null);
     setErro('');
   };
@@ -34,22 +29,12 @@ export default function SalarioLiquido() {
       return;
     }
     
-    const salarioNum = parseFloat(salario);
-    const dependentesNum = parseInt(dependentes || '0');
-    const descontosNum = parseFloat(descontos || "0");
-
-    if (salarioNum < 0 || dependentesNum < 0 || descontosNum < 0) {
-      setErro('Os valores inseridos não podem ser negativos. Por favor, verifique os campos.');
-      setResultado(null);
-      return;
-    }
-    
     setErro('');
 
     const res = calcularSalario({
-      salario: salarioNum,
-      dependentes: dependentesNum,
-      descontos: descontosNum,
+      salario: salario || 0,
+      dependentes: parseInt(dependentes || '0'),
+      descontos: descontos || 0,
     });
 
     setResultado(res);
@@ -66,18 +51,21 @@ export default function SalarioLiquido() {
         <div className="sm:col-span-2">
           <label htmlFor="salario-bruto-sl" className="block font-medium">
             Salário bruto
-            <Tooltip message="Salário mensal registrado na carteira de trabalho, sem considerar descontos ou adicionais." />
+            <Tooltip message="Salário mensal registrado na carteira de trabalho." />
           </label>
           <div className="flex items-center">
             <span className="bg-gray-100 px-3 py-2 rounded-l text-gray-600">R$</span>
-            <input
+            <NumericFormat
               id="salario-bruto-sl"
-              type="number"
-              min="0"
               className="border rounded-r px-3 py-2 w-full"
-              placeholder="Ex: 3000"
+              placeholder="Ex: 3.000,00"
+              thousandSeparator="."
+              decimalSeparator=","
+              prefix=""
+              decimalScale={2}
+              fixedDecimalScale
               value={salario}
-              onChange={e => setSalario(e.target.value)}
+              onValueChange={(values) => setSalario(values.floatValue)}
             />
           </div>
         </div>
@@ -85,7 +73,7 @@ export default function SalarioLiquido() {
         <div className="sm:col-span-2">
           <label htmlFor="dependentes-sl" className="block font-medium">
             Número de dependentes
-            <Tooltip message="Quantidade de dependentes legais que influenciam no cálculo do IRRF." />
+            <Tooltip message="Quantidade de dependentes legais para o cálculo do IRRF." />
           </label>
           <input
             id="dependentes-sl"
@@ -104,18 +92,21 @@ export default function SalarioLiquido() {
         <div>
           <label htmlFor="outros-descontos-sl" className="block font-medium">
             Outros descontos
-            <Tooltip message="Inclui vale-transporte, plano de saúde, pensão alimentícia e outros descontos fixos." />
+            <Tooltip message="Soma de descontos como Vale-Transporte, plano de saúde, etc." />
           </label>
           <div className="flex items-center">
             <span className="bg-gray-100 px-3 py-2 rounded-l text-gray-600">R$</span>
-            <input
+            <NumericFormat
               id="outros-descontos-sl"
-              type="number"
-              min="0"
               className="border rounded-r px-3 py-2 w-full"
-              placeholder="Ex: 400"
+              placeholder="Ex: 400,00"
+              thousandSeparator="."
+              decimalSeparator=","
+              prefix=""
+              decimalScale={2}
+              fixedDecimalScale
               value={descontos}
-              onChange={e => setDescontos(e.target.value)}
+              onValueChange={(values) => setDescontos(values.floatValue)}
             />
           </div>
         </div>
