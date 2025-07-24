@@ -125,38 +125,38 @@ export default function Rescisao() {
         </p>
         <div className="space-y-5">
           <div>
-            <label className="block font-medium">
+            <label htmlFor="salario-bruto" className="block font-medium">
               Salário bruto
               <Tooltip message="Salário mensal registrado na carteira de trabalho, sem considerar descontos ou adicionais." />
             </label>
             <div className="flex items-center">
               <span className="bg-gray-100 px-3 py-2 rounded-l text-gray-600">R$</span>
-              <input type="number" min="0" className="border rounded-r px-3 py-2 w-full" placeholder="Ex: 2500" value={salario} onChange={e => setSalario(e.target.value)} />
+              <input id="salario-bruto" type="number" min="0" className="border rounded-r px-3 py-2 w-full" placeholder="Ex: 2500" value={salario} onChange={e => setSalario(e.target.value)} />
             </div>
           </div>
           <div className="grid gap-4 md:grid-cols-2">
             <div>
-              <label className="block font-medium">
+              <label htmlFor="data-admissao" className="block font-medium">
                 Data de admissão
                 <Tooltip message="Data em que você começou oficialmente a trabalhar na empresa." />
               </label>
-              <input type="date" className="border rounded px-3 py-2 w-full" value={admissao} onChange={e => setAdmissao(e.target.value)} />
+              <input id="data-admissao" type="date" className="border rounded px-3 py-2 w-full" value={admissao} onChange={e => setAdmissao(e.target.value)} />
             </div>
             <div>
-              <label className="block font-medium">
+              <label htmlFor="data-saida" className="block font-medium">
                 Data de saída
                 <Tooltip message="Último dia de vínculo com a empresa, incluindo aviso prévio." />
               </label>
-              <input type="date" className="border rounded px-3 py-2 w-full" value={saida} onChange={e => setSaida(e.target.value)} />
+              <input id="data-saida" type="date" className="border rounded px-3 py-2 w-full" value={saida} onChange={e => setSaida(e.target.value)} />
             </div>
           </div>
           
           <div>
-            <label className="block font-medium">
+            <label htmlFor="motivo-saida" className="block font-medium">
               Motivo da saída
               <Tooltip message="Se foi pedido de demissão, demissão sem justa causa ou por justa causa." />
             </label>
-            <select className="border rounded px-3 py-2 w-full appearance-none pr-8" value={motivo} onChange={e => setMotivo(e.target.value)}>
+            <select id="motivo-saida" className="border rounded px-3 py-2 w-full appearance-none pr-8" value={motivo} onChange={e => setMotivo(e.target.value)}>
               <option value="">Selecione</option>
               <option value="sem_justa_causa">Demissão sem justa causa</option>
               <option value="pedido_demissao">Pedido de demissão</option>
@@ -165,11 +165,12 @@ export default function Rescisao() {
           </div>
           
           <div className="relative">
-            <label className="block font-medium">
+            <label htmlFor="aviso-previo" className="block font-medium">
               Tipo de aviso prévio
               <Tooltip message="O aviso prévio pode ser trabalhado, indenizado (pago sem trabalhar) ou dispensado." />
             </label>
             <select
+              id="aviso-previo"
               className="border rounded px-3 py-2 w-full appearance-none pr-8 disabled:bg-gray-100 disabled:cursor-not-allowed"
               value={aviso}
               onChange={e => setAviso(e.target.value)}
@@ -178,7 +179,6 @@ export default function Rescisao() {
               <option value="">{avisoPrevioDesabilitado ? 'Não aplicável' : 'Selecione'}</option>
               {opcoesAviso.map(opt => (<option key={opt.value} value={opt.value}>{opt.label}</option>))}
             </select>
-            {/* --- TOOLTIP ADICIONADO --- */}
             {avisoPrevioDesabilitado && motivo === 'justa_causa' && (
               <div className="absolute inset-0 group cursor-help">
                 <div className="absolute hidden group-hover:block bg-gray-800 text-white text-xs p-2 rounded shadow-lg w-64 top-full mt-2 left-1/2 -translate-x-1/2 z-10">
@@ -197,6 +197,7 @@ export default function Rescisao() {
               <label className={`flex items-center gap-2 ${menosDe12Meses ? 'cursor-not-allowed' : ''}`}>
                 <input
                   type="radio"
+                  name="ferias-vencidas"
                   checked={!menosDe12Meses && feriasVencidas === true}
                   onChange={() => setFeriasVencidas(true)}
                   disabled={menosDe12Meses}
@@ -206,6 +207,7 @@ export default function Rescisao() {
               <label className={`flex items-center gap-2 ${menosDe12Meses ? 'cursor-not-allowed' : ''}`}>
                 <input
                   type="radio"
+                  name="ferias-vencidas"
                   checked={menosDe12Meses || feriasVencidas === false}
                   onChange={() => setFeriasVencidas(false)}
                   disabled={menosDe12Meses}
@@ -249,7 +251,6 @@ export default function Rescisao() {
               <ul className="text-sm mb-3 space-y-1">
                 <li>🔹 Saldo de salário: <strong>{formatarReal(resultado.saldoSalario)}</strong></li>
                 
-                {/* --- LÓGICA DE EXIBIÇÃO MODIFICADA --- */}
                 {resultado.avisoPrevio > 0 && (
                   <li>🔹 Aviso prévio indenizado: <strong>{formatarReal(resultado.avisoPrevio)}</strong></li>
                 )}
