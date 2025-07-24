@@ -55,9 +55,6 @@ O site estará disponível em: http://localhost:5173
 
 **Mylena Viana Nunes** — uma estudante de Análise e Desenvolvimento de Sistemas que gosta de craftar ferramentas úteis para o seu inventário do dia a dia.
 
-- LinkedIn
-- GitHub: https://github.com/mylenosa
-
 ---
 
 ## 📌 Aviso Legal
